@@ -1,4 +1,4 @@
-# Tilawa
+# Tilawa (Android, Kotlin)
 An Android Library, written in Kotlin, for streaming tilawa of the Qur'an from the web (Currently [mp3quran.net](mp3quran.net) is supported).
 
 ## Usage
@@ -58,7 +58,7 @@ tilawaProvider.act(reciteFromStart)
 Recite from a certain position in time
 ```kotlin
 tilawaProvider.act{
-  reciteFrom(it, 60000L /* Recite from 1:00 onwards*/)
+  reciteFrom(it, 60000L /* Recite from 1:00 onwards */)
 }
 ```
 
