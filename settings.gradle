@@ -1,0 +1,3 @@
+include ':tilawa'
+include ':app'
+rootProject.name = "quran_tilawa"

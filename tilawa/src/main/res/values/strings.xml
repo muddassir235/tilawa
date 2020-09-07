@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="qari_names">
+        <item>الشيخ عبد الرحمن السديس</item>
+        <item>الشيخ سعود بن ابراهيم الشريم</item>
+        <item>الشيخ صلاح بن محمد البدير</item>
+        <item>الشيخ علي بن عبد الرحمن الحذيفي</item>
+        <item>الشيخ ماهر بن حمد المعيقلي</item>
+        <item>الشيخ عبد الله عواد الجهني</item>
+        <item>الشيخ محمد اللحيدان</item>
+        <item>الشيخ مشاري بن راشد العفاسي</item>
+        <item>الشيخ علي جابر</item>
+        <item>الشيخ بندر بليله</item>
+        <item>الشيخ عبـد الباسـط عبـد ٱلصـمـد‎</item>
+        <item>الشيخ رعد محمد الكردی</item>
+        <item>الشيخ أحمد بن علي العجمي</item>
+    </string-array>
+
+    <string-array name="qari_english_names">
+        <item>Abdur Rahman as Sudais</item>
+        <item>Saud bin Ibrahim ash Shuraim</item>
+        <item>Salah bin Muhammad al Budair</item>
+        <item>Ali bin Abdur Rahman al Hudhaify</item>
+        <item>Shiekh Maher al Mu\'aiqly</item>
+        <item>Abdullah \'awad Al Juhainy</item>
+        <item>Muhammad al Luhaidan</item>
+        <item>Mishary bin Rashid al Afasy</item>
+        <item>Ali Jaber</item>
+        <item>Bandar Baleela</item>
+        <item>Abdul Basit Abdus Samad</item>
+        <item>Raad Muhammad al Kurdi</item>
+        <item>Ahmed bin Ali al \'Ajmi</item>
+    </string-array>
+
+    <string-array name="reciter_audio_servers">
+        <item>https://server11.mp3quran.net/sds</item>
+        <item>https://server7.mp3quran.net/shur</item>
+        <item>https://server6.mp3quran.net/s_bud</item>
+        <item>https://server9.mp3quran.net/hthfi</item>
+        <item>https://server12.mp3quran.net/maher</item>
+        <item>https://server13.mp3quran.net/jhn</item>
+        <item>https://server8.mp3quran.net/lhdan</item>
+        <item>https://server8.mp3quran.net/afs</item>
+        <item>https://server11.mp3quran.net/a_jbr</item>
+        <item>https://server6.mp3quran.net/balilah</item>
+        <item>https://server7.mp3quran.net/basit</item>
+        <item>https://server6.mp3quran.net/kurdi</item>
+        <item>https://server10.mp3quran.net/ajm/128</item>
+    </string-array>
+</resources>
