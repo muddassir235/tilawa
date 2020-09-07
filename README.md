@@ -88,6 +88,10 @@ tilawaProvider.act{ currentTilawa ->
   newTilawa ^lambda
 }
 ```
+## Uses
+https://github.com/muddassir235/kmacros
+https://github.com/muddassir235/eprefs
+https://github.com/muddassir235/faudio
 
 ## License
 ```
