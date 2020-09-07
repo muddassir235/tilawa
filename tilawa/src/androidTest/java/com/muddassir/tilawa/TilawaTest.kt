@@ -48,6 +48,7 @@ class TilawaTest {
     fun teardown() {
         try {
             tilawaProducer.act(removeObservers)
+            tilawaProducer.resetState()
         } catch (e: Exception) {
 
         }
