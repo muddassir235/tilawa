@@ -71,7 +71,7 @@ tilawaProvider.act(stop)
 Change Qari and Surah
 ```kotlin
 tilawaProvider.act {
-  changeSurah(it, SURAH_INFO[1] /* Surah Al-Baqarah */)
+  changeSurah(it, SUVAR_INFO[1] /* Surah Al-Baqarah */)
 }
 tilawaProvider.act {
   changeQari(it, tilawaProvider.qurraInfo[1] /* Second available Qari */)
