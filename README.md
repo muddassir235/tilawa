@@ -89,9 +89,9 @@ tilawaProvider.act{ currentTilawa ->
 }
 ```
 ## Uses
-https://github.com/muddassir235/kmacros
-https://github.com/muddassir235/eprefs
-https://github.com/muddassir235/faudio
+* https://github.com/muddassir235/kmacros
+* https://github.com/muddassir235/eprefs
+* https://github.com/muddassir235/faudio
 
 ## License
 ```
