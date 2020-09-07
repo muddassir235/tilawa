@@ -1,5 +1,5 @@
 # Tilawa
-An Android Library, written in Kotlin, for streaming tilawa of the Qur'an from the web.
+An Android Library, written in Kotlin, for streaming tilawa of the Qur'an from the web (Currently mp3quran.net is supported).
 
 ## Usage
 
@@ -8,9 +8,17 @@ Define a TilawaProvider
 val tilawaProvider = TilawaProvider(context)
 ```
 
-Get available Qurra
+Get the available Qurra
 ```kotlin
 val qurra = tilawaProvider.qurraInfo
+
+val firstQari = qurra[0]
+
+firstQari.number // For displaying in recycler views
+firstQari.arabicName
+firstQari.englishName
+firstQari.availableSuvar // Availabe Suvar for the qari
+firstQari.audioServerUrl // Url of the server the Tilawa mp3 are hosted on.
 ```
 
 Start, Pause and Stop the Tilawa
