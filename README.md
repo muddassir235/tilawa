@@ -37,7 +37,7 @@ dependencies {
 
 ## Usage
 
-Define a TilawaProvider. Tilawa state persistance is handle out of the box (So when the app is reopened and tilawa is started it will continue when it was left off when the app was closed)
+Define a TilawaProvider. Tilawa state persistance is handled out of the box (So when the app is reopened and tilawa is started it will continue when it was left off when the app was closed)
 
 ```kotlin
 val tilawaProvider = TilawaProvider(context)
