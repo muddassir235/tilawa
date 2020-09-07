@@ -1,4 +1,6 @@
 # Tilawa تلاوه القرآن الكريم (Android, Kotlin)
+[![Release](https://jitpack.io/v/muddassir235/tilawa.svg?style=flat-square)](https://jitpack.io/#muddassir235/tilawa/)
+
 An Android Library, written in Kotlin, for streaming tilawa of the Qur'an from the web (Currently [mp3quran.net](mp3quran.net) is supported).
 
 Currently the following Qurra are supported,
@@ -16,6 +18,22 @@ Currently the following Qurra are supported,
 * Sheikh Abdul Basit Abdus Samad الشيخ عبـد الباسـط عبـد ٱلصـمـد
 * Sheikh Raad Muhammad al Kurdi الشيخ رعد محمد الكردی
 * Sheikh Ahmed bin Ali al 'Ajmi الشيخ أحمد بن علي العجمي
+
+## Add Dependencies
+Add the following in your project level build.gradle
+```groovy
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+and the following in your app level build.gradle
+```groovy
+dependencies {
+    implementation 'com.github.muddassir235:tilawa:1.0'
+}
+```
 
 ## Usage
 
