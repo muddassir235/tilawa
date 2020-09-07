@@ -2,12 +2,11 @@ package com.muddassir.tilawa
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.muddassir.faudio.Audio
-import com.muddassir.faudio.AudioStateInput
 import com.muddassir.kmacros.delay
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -29,33 +28,41 @@ class TilawaTest {
      * Test the following state transitions
      *
      *
-     * start       : stopped -> started
-     * start       : paused -> started
-     * pause       : started -> paused
-     * stop        : started -> stopped
-     * stop        : paused -> stopped
-     * next        : surah 3 -> surah 4
-     * previous    : surah 3 -> surah 2
-     * previous    : surah 3 -> surah 2
-     * reciteFrom  : _ -> 60 seconds
-     * changeQari  : 0 -> 2
-     * changeSurah : 3 -> 10
+     * start           : stopped -> started
+     * start           : paused -> started
+     * pause           : started -> paused
+     * stop            : started -> stopped
+     * stop            : paused -> stopped
+     * next            : surah 3 -> surah 4
+     * previous        : surah 3 -> surah 2
+     * previous        : surah 3 -> surah 2
+     * reciteFrom      : _ -> 60 seconds
+     * changeQari      : 0 -> 2
+     * changeSurah     : 3 -> 10
+     * reciteFromStart : _ -> 0 seconds
      */
 
-    private lateinit var tilawa: Tilawa
+    private lateinit var tilawaProducer: TilawaProducer
 
     @After
-    fun teardown() { tilawa.audio.release() /* A bit non-functional here :( */ }
+    fun teardown() {
+        try {
+            tilawaProducer.act(removeObservers)
+        } catch (e: Exception) {
+
+        }
+    }
 
     @Test
     @Repeat(repetitions)
     fun testStartStoppedToStarted() {
         afterTilawaStart {
-            changeTilawa(stop)
-            changeTilawa(start)
+            tilawaProducer.act(stop)
+            tilawaProducer.act(start)
             observeAfter(10000) {
                 verifyTilawa(it, stopped = false, paused = false, progress = 20000L,
-                    surahInfo = MOCK_QARI_INFO[0].availableSuvar[3], qariInfo = MOCK_QARI_INFO[0])
+                    surahInfo = tilawaProducer.qurraInfo[0].availableSuvar[3],
+                    qariInfo = tilawaProducer.qurraInfo[0])
             }
         }
     }
@@ -64,11 +71,12 @@ class TilawaTest {
     @Repeat(repetitions)
     fun testStartPausedToStarted() {
         afterTilawaStart {
-            changeTilawa(pause)
-            changeTilawa(start)
+            tilawaProducer.act(pause)
+            tilawaProducer.act(start)
             observeAfter(10000) {
                 verifyTilawa(it, stopped = false, paused = false, progress = 20000L,
-                    surahInfo = MOCK_QARI_INFO[0].availableSuvar[3], qariInfo = MOCK_QARI_INFO[0])
+                    surahInfo = tilawaProducer.qurraInfo[0].availableSuvar[3],
+                    qariInfo = tilawaProducer.qurraInfo[0])
             }
         }
     }
@@ -77,10 +85,11 @@ class TilawaTest {
     @Repeat(repetitions)
     fun testPauseStartedToPaused() {
         afterTilawaStart {
-            changeTilawa(pause)
+            tilawaProducer.act(pause)
             observe {
                 verifyTilawa(it, stopped = false, paused = true, progress = 10000L,
-                    surahInfo = MOCK_QARI_INFO[0].availableSuvar[3], qariInfo = MOCK_QARI_INFO[0])
+                    surahInfo = tilawaProducer.qurraInfo[0].availableSuvar[3],
+                    qariInfo = tilawaProducer.qurraInfo[0])
             }
         }
     }
@@ -89,10 +98,11 @@ class TilawaTest {
     @Repeat(repetitions)
     fun testStopStartedToStopped() {
         afterTilawaStart {
-            changeTilawa(stop)
+            tilawaProducer.act(stop)
             observe {
                 verifyTilawa(it, stopped = true, paused = true, progress = 10000L,
-                    surahInfo = MOCK_QARI_INFO[0].availableSuvar[3], qariInfo = MOCK_QARI_INFO[0])
+                    surahInfo = tilawaProducer.qurraInfo[0].availableSuvar[3],
+                    qariInfo = tilawaProducer.qurraInfo[0])
             }
         }
     }
@@ -101,11 +111,12 @@ class TilawaTest {
     @Repeat(repetitions)
     fun testStopPausedToStopped() {
         afterTilawaStart {
-            changeTilawa(pause)
-            changeTilawa(stop)
+            tilawaProducer.act(pause)
+            tilawaProducer.act(stop)
             observe {
                 verifyTilawa(it, stopped = true, paused = true, progress = 10000L,
-                    surahInfo = MOCK_QARI_INFO[0].availableSuvar[3], qariInfo = MOCK_QARI_INFO[0])
+                    surahInfo = tilawaProducer.qurraInfo[0].availableSuvar[3],
+                    qariInfo = tilawaProducer.qurraInfo[0])
             }
         }
     }
@@ -114,10 +125,11 @@ class TilawaTest {
     @Repeat(repetitions)
     fun testNext() {
         afterTilawaStart {
-            changeTilawa(next)
+            tilawaProducer.act(next)
             observeAfter(10000) {
                 verifyTilawa(it, stopped = false, paused = false, progress = 10000L,
-                    surahInfo = MOCK_QARI_INFO[0].availableSuvar[4], qariInfo = MOCK_QARI_INFO[0])
+                    surahInfo = tilawaProducer.qurraInfo[0].availableSuvar[4],
+                    qariInfo = tilawaProducer.qurraInfo[0])
             }
         }
     }
@@ -126,10 +138,11 @@ class TilawaTest {
     @Repeat(repetitions)
     fun testPrev() {
         afterTilawaStart {
-            changeTilawa(previous)
+            tilawaProducer.act(previous)
             observeAfter(10000) {
                 verifyTilawa(it, stopped = false, paused = false, progress = 10000L,
-                    surahInfo = MOCK_QARI_INFO[0].availableSuvar[2], qariInfo = MOCK_QARI_INFO[0])
+                    surahInfo = tilawaProducer.qurraInfo[0].availableSuvar[2],
+                    qariInfo = tilawaProducer.qurraInfo[0])
             }
         }
     }
@@ -138,10 +151,11 @@ class TilawaTest {
     @Repeat(repetitions)
     fun testReciteFrom() {
         afterTilawaStart {
-            changeTilawa{ reciteFrom(it, 60000L) }
+            tilawaProducer.act{ reciteFrom(it, 60000L) }
             observeAfter(10000) {
                 verifyTilawa(it, stopped = false, paused = false, progress = 70000L,
-                    surahInfo = MOCK_QARI_INFO[0].availableSuvar[3], qariInfo = MOCK_QARI_INFO[0])
+                    surahInfo = tilawaProducer.qurraInfo[0].availableSuvar[3],
+                    qariInfo = tilawaProducer.qurraInfo[0])
             }
         }
     }
@@ -150,16 +164,17 @@ class TilawaTest {
     @Repeat(repetitions)
     fun testChangeQari(){
         afterTilawaStart {
-            changeTilawa{
+            tilawaProducer.act {
                 changeQari(
                     it,
-                    MOCK_QARI_INFO[2],
-                    MOCK_QARI_INFO[2].availableSuvar[0]
+                    tilawaProducer.qurraInfo[2],
+                    tilawaProducer.qurraInfo[2].availableSuvar[0]
                 )
             }
             observeAfter(10000){
                 verifyTilawa(it, stopped = false, paused = false, progress = 10000L,
-                    surahInfo = MOCK_QARI_INFO[0].availableSuvar[3], qariInfo = MOCK_QARI_INFO[2])
+                    surahInfo = tilawaProducer.qurraInfo[0].availableSuvar[3],
+                    qariInfo = tilawaProducer.qurraInfo[2])
             }
         }
     }
@@ -168,15 +183,16 @@ class TilawaTest {
     @Repeat(repetitions)
     fun testChangeSurah(){
         afterTilawaStart {
-            changeTilawa{
+            tilawaProducer.act{
                 changeSurah(
                     it,
-                    MOCK_QARI_INFO[0].availableSuvar[10]
+                    tilawaProducer.qurraInfo[0].availableSuvar[10]
                 )
             }
             observeAfter(10000) {
                 verifyTilawa(it, stopped = false, paused = false, progress = 10000L,
-                    surahInfo = MOCK_QARI_INFO[0].availableSuvar[10], qariInfo = MOCK_QARI_INFO[0])
+                    surahInfo = tilawaProducer.qurraInfo[0].availableSuvar[10],
+                    qariInfo = tilawaProducer.qurraInfo[0])
             }
         }
     }
@@ -185,10 +201,30 @@ class TilawaTest {
     @Repeat(repetitions)
     fun testReciteFromStart(){
         afterTilawaStart {
-            changeTilawa(reciteFromStart)
+            tilawaProducer.act(reciteFromStart)
             observeAfter(10000) {
                 verifyTilawa(it, stopped = false, paused = false, progress = 10000L,
-                    surahInfo = MOCK_QARI_INFO[0].availableSuvar[3], qariInfo = MOCK_QARI_INFO[0])
+                    surahInfo = tilawaProducer.qurraInfo[0].availableSuvar[3],
+                    qariInfo = tilawaProducer.qurraInfo[0])
+            }
+        }
+    }
+
+    @Test
+    @Repeat(repetitions)
+    fun testStatePersistence(){
+        afterTilawaStart(150000L) {
+            delay(120000L) {
+                tilawaProducer = TilawaProducer(
+                    InstrumentationRegistry.getInstrumentation().targetContext)
+
+                tilawaProducer.act(start)
+
+                observeAfter(10000L) {
+                    verifyTilawa(it, stopped = false, paused = false, progress = 130000L,
+                        surahInfo = tilawaProducer.qurraInfo[0].availableSuvar[3],
+                        qariInfo = tilawaProducer.qurraInfo[0])
+                }
             }
         }
     }
@@ -196,16 +232,16 @@ class TilawaTest {
     private fun verifyTilawa(found: TilawaObservation, stopped:Boolean, paused:Boolean,
                              progress: Long, surahInfo: SurahInfo, qariInfo: QariInfo
     ) {
-        assertEquals(found.audioStateInfo?.stopped?:true, stopped)
-        assertEquals(found.audioStateInfo?.paused?:true, paused)
-        assertEquals(found.audioStateInfo?.index?:0,
-            qariInfo.availableSuvar.indexOf(surahInfo))
+        assertEquals(stopped, found.audioStateInfo?.stopped?:true)
+        assertEquals(paused, found.audioStateInfo?.paused?:true)
+        assertEquals(qariInfo.availableSuvar.indexOf(surahInfo),
+            found.audioStateInfo?.index?:0)
         assertTrue(found.audioStateInfo?.duration?:0L != 0L)
         assertTrue(found.audioStateInfo?.bufferedPosition?:0L != 0L)
         assertTrue((found.audioStateInfo?.progress ?: 0L) > (progress-10000L))
         assertTrue((found.audioStateInfo?.progress ?: 0L) < (progress+20000L))
-        assertTrue((found.surahInfo ?: SUVAR_INFO[0]) == surahInfo)
-        assertTrue((found.qariInfo?: MOCK_QARI_INFO[1]) == qariInfo)
+        assertEquals(surahInfo, found.surahInfo ?: SUVAR_INFO[0])
+        assertEquals(qariInfo, found.qariInfo)
     }
 
     private fun observeAfter(millis: Long, observer:
@@ -216,33 +252,36 @@ class TilawaTest {
     }
 
     private fun observe(observer: (observation: TilawaObservation) -> Unit) {
-        tilawa = addObserver(tilawa, observer)
-    }
-
-    private fun changeTilawa(action: ((Tilawa) -> Tilawa)) {
-        tilawa = action.invoke(tilawa)
+        tilawaProducer.act{ addObserver(it, observer) }
     }
 
     private fun afterTilawaStart(task: ((Unit)->Unit)) {
         runOnMainThread {
-            tilawa = start(getTilawaInStoppedState())
+            tilawaProducer = TilawaProducer(
+                context = InstrumentationRegistry.getInstrumentation().targetContext)
+            tilawaProducer.act{ changeSurah(it, SUVAR_INFO[3]) }
+            tilawaProducer.act(start)
             delay(10000) { task.invoke(Unit) }
         }
     }
 
-    private fun getTilawaInStoppedState(): Tilawa {
-        return Tilawa(
-            qariInfo = MOCK_QARI_INFO[0], audio = Audio(
-                null,
-                context = InstrumentationRegistry.getInstrumentation().targetContext,
-                uris = qariInfoToAudioUrls(MOCK_QARI_INFO[0]),
-                audioState = AudioStateInput(3, true, 0, true)
-            ), observers = null
-        )
+    private fun afterTilawaStart(duration: Long, task: ((Unit)->Unit)) {
+        runOnMainThread(duration) {
+            tilawaProducer = TilawaProducer(
+                context = InstrumentationRegistry.getInstrumentation().targetContext)
+            tilawaProducer.act{ changeSurah(it, SUVAR_INFO[3]) }
+            tilawaProducer.act(start)
+            delay(10000) { task.invoke(Unit) }
+        }
     }
 
     private fun runOnMainThread(task: ((Unit)->Unit)) {
         InstrumentationRegistry.getInstrumentation().runOnMainSync { task.invoke(Unit) }
         Thread.sleep(30000)
+    }
+
+    private fun runOnMainThread(duration: Long, task: ((Unit)->Unit)) {
+        InstrumentationRegistry.getInstrumentation().runOnMainSync { task.invoke(Unit) }
+        Thread.sleep(duration)
     }
 }

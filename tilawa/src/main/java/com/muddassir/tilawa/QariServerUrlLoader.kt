@@ -24,11 +24,11 @@ import java.util.*
 /**
  * ServerUrlsLoadListener - Interface which can be used to listen to the event when the urls are loaded.
  */
-interface ServerUrlsLoadListener {
+internal interface ServerUrlsLoadListener {
     fun onQariUrlsLoaded(urls: Array<String?>?)
 }
 
-class QariServerUrlLoader(context: Context) {
+internal class QariServerUrlLoader(context: Context) {
     private var queue: RequestQueue = Volley.newRequestQueue(context) // Volley Request Queue
 
     /* Url where QariInfo data is present */

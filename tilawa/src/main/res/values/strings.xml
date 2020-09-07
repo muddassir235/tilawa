@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="qari_names">
+    <string-array name="qurra_names">
         <item>الشيخ عبد الرحمن السديس</item>
         <item>الشيخ سعود بن ابراهيم الشريم</item>
         <item>الشيخ صلاح بن محمد البدير</item>
@@ -16,7 +16,7 @@
         <item>الشيخ أحمد بن علي العجمي</item>
     </string-array>
 
-    <string-array name="qari_english_names">
+    <string-array name="qurra_english_names">
         <item>Abdur Rahman as Sudais</item>
         <item>Saud bin Ibrahim ash Shuraim</item>
         <item>Salah bin Muhammad al Budair</item>
@@ -32,7 +32,7 @@
         <item>Ahmed bin Ali al \'Ajmi</item>
     </string-array>
 
-    <string-array name="reciter_audio_servers">
+    <string-array name="qurra_audio_servers">
         <item>https://server11.mp3quran.net/sds</item>
         <item>https://server7.mp3quran.net/shur</item>
         <item>https://server6.mp3quran.net/s_bud</item>

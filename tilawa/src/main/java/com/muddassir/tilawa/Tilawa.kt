@@ -6,22 +6,49 @@ import com.muddassir.faudio.Audio
 import com.muddassir.faudio.AudioObservation
 import com.muddassir.faudio.AudioObserver
 import com.muddassir.faudio.AudioStateInput
+import java.io.Serializable
 
 data class SurahInfo(val number        : Int    = -1,
                      val arabicName    : String = "",
                      val englishName   : String = "",
-                     val makkiOrMadani : String = "")
+                     val makkiOrMadani : String = ""): Serializable
 
 data class QariInfo(val number         : Int     = -1,
                     val arabicName     : String  = "",
                     val englishName    : String  = "",
                     val audioServerUrl : String? = "",
                     val availableSuvar : Array<SurahInfo> = SUVAR_INFO,
-                    var isFavorite     : Boolean = false)
+                    var isFavorite     : Boolean = false): Serializable {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
 
-data class TilawaObservation(val qariInfo: QariInfo?,
-                             val surahInfo: SurahInfo?,
-                             val audioStateInfo: AudioObservation?)
+        other as QariInfo
+
+        if (number != other.number) return false
+        if (arabicName != other.arabicName) return false
+        if (englishName != other.englishName) return false
+        if (audioServerUrl != other.audioServerUrl) return false
+        if (!availableSuvar.contentEquals(other.availableSuvar)) return false
+        if (isFavorite != other.isFavorite) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = number
+        result = 31 * result + arabicName.hashCode()
+        result = 31 * result + englishName.hashCode()
+        result = 31 * result + (audioServerUrl?.hashCode() ?: 0)
+        result = 31 * result + availableSuvar.contentHashCode()
+        result = 31 * result + isFavorite.hashCode()
+        return result
+    }
+}
+
+data class TilawaObservation(val qariInfo: QariInfo? = null,
+                             val surahInfo: SurahInfo? = null,
+                             val audioStateInfo: AudioObservation? = null): Serializable
 
 typealias TilawaObserver = ((observation: TilawaObservation) -> Unit)
 
@@ -189,6 +216,25 @@ val addObserver = { tilawa: Tilawa, observer: TilawaObserver ->
     val observers = tilawa.observers ?: HashSet()
     observers.add(observer)
     Tilawa(tilawa.qariInfo, tilawa.audio, observers)
+}
+
+val removeObservers = { tilawa: Tilawa ->
+    tilawa.audio.release()
+
+    Tilawa(
+        tilawa.qariInfo,
+        Audio(
+            tilawa.audio,
+            tilawa.audio.context,
+            tilawa.audio.uris,
+            AudioStateInput(
+                tilawa.audio.currentIndex,
+                !tilawa.audio.started,
+                tilawa.audio.currentPosition,
+                tilawa.audio.stopped
+            )),
+        null
+    )
 }
 
 val qariInfoToAudioUrls: ((QariInfo) -> Array<Uri>) = { info ->
