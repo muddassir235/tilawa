@@ -1,4 +1,4 @@
-# Tilawa (Android, Kotlin)
+# Tilawa تلاوه القرآن الكريم (Android, Kotlin)
 An Android Library, written in Kotlin, for streaming tilawa of the Qur'an from the web (Currently [mp3quran.net](mp3quran.net) is supported).
 
 Currently the following Qurra are supported,
