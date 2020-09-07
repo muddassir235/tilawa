@@ -27,6 +27,22 @@ firstSurah.englishName
 firstSurah.makkiOrMadani // Value is either "makki" or "madani"
 ```
 
+Currently the following Qurra are supported,
+        
+* Sheikh Abdur Rahman as Sudais الشيخ عبد الرحمن السديس
+* Sheikh Saud bin Ibrahim ash Shuraim الشيخ سعود بن ابراهيم الشريم
+* Sheikh Salah bin Muhammad al Budair الشيخ صلاح بن محمد البدير
+* Sheikh Ali bin Abdur Rahman al Hudhaify الشيخ علي بن عبد الرحمن الحذيفي
+* Sheikh Shiekh Maher al Mu'aiqly الشيخ ماهر بن حمد المعيقلي
+* Sheikh Abdullah 'awad Al Juhainy الشيخ عبد الله عواد الجهني
+* Sheikh Muhammad al Luhaidan الشيخ محمد اللحيدان
+* Sheikh Mishary bin Rashid al Afasy الشيخ مشاري بن راشد العفاسي
+* Sheikh Ali Jaber الشيخ علي جابر
+* Sheikh Bandar Baleela الشيخ بندر بليله
+* Sheikh Abdul Basit Abdus Samad الشيخ عبـد الباسـط عبـد ٱلصـمـد
+* Sheikh Raad Muhammad al Kurdi الشيخ رعد محمد الكردی
+* Sheikh Ahmed bin Ali al 'Ajmi الشيخ أحمد بن علي العجمي
+
 Start, Pause and Stop the Tilawa
 ```kotlin
 tilawaProvider.act(start)
