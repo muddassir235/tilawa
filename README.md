@@ -1,5 +1,5 @@
 # Tilawa
-An Android Library, written in Kotlin, for streaming tilawa of the Qur'an from the web (Currently mp3quran.net is supported).
+An Android Library, written in Kotlin, for streaming tilawa of the Qur'an from the web (Currently [mp3quran.net](mp3quran.net) is supported).
 
 ## Usage
 
@@ -14,11 +14,17 @@ val qurra = tilawaProvider.qurraInfo
 
 val firstQari = qurra[0]
 
-firstQari.number // For displaying in recycler views
 firstQari.arabicName
 firstQari.englishName
 firstQari.availableSuvar // Availabe Suvar for the qari
 firstQari.audioServerUrl // Url of the server the Tilawa mp3 are hosted on.
+
+val firstSurah = firstQari.availableSuvar[0]
+
+firstSurah.number        // Surah number [0,113]
+firstSurah.arabicName 
+firstSurah.englishName
+firstSurah.makkiOrMadani // Value is either "makki" or "madani"
 ```
 
 Start, Pause and Stop the Tilawa
