@@ -31,7 +31,7 @@ allprojects {
 and the following in your app level build.gradle
 ```groovy
 dependencies {
-    implementation 'com.github.muddassir235:tilawa:1.0'
+    implementation 'com.github.muddassir235:tilawa:1.1'
 }
 ```
 
