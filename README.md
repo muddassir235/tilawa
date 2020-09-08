@@ -99,6 +99,10 @@ tilawaProducer.act{
 
 Observe the Tilawa. The observer will be called whenever the Tilawa state change. This can be every second for progress updates, on Qari change, on Surah Change, on audio state change (e.g. start, pause, stop). 
 ```kotlin
+tilawaProducer.observation() // Current state of the tilawa
+```
+Or you can add a listener to receive all state changes.
+```kotlin
 tilawaProducer.act{
   addObserver(it) { observation ->
     // observation.qariInfo
