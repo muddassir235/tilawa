@@ -120,7 +120,7 @@ tilawaProvider.act{ currentTilawa ->
   val newTilawa = //...
   // Your logic
   
-  newTilawa ^lambda
+  newTilawa // ^lambda
 }
 ```
 ## Uses
