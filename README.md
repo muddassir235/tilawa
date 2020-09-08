@@ -62,7 +62,7 @@ firstSurah.englishName
 firstSurah.makkiOrMadani // Value is either "makki" or "madani"
 ```
 
-Start, Pause and Stop the Tilawa
+Start, pause and stop the Tilawa
 ```kotlin
 tilawaProducer.act(start)
 tilawaProducer.act(pause)
@@ -79,7 +79,7 @@ tilawaProducer.act {
 }
 ```
 
-Go to Next Surah/Previous Surah
+Go to the next/previous Surah
 ```kotlin
 tilawaProducer.act(next)
 tilawaProducer.act(previous)
