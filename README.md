@@ -40,12 +40,12 @@ dependencies {
 Define a TilawaProvider. Tilawa state persistance is handled out of the box (So when the app is reopened and tilawa is started it will continue when it was left off when the app was closed)
 
 ```kotlin
-val tilawaProvider = TilawaProvider(context)
+val tilawaProducer = TilawaProducer(context)
 ```
 
 Get the available Qurra
 ```kotlin
-val qurra = tilawaProvider.qurraInfo
+val qurra = tilawaProducer.qurraInfo
 
 val firstQari = qurra[0]
 
@@ -64,42 +64,42 @@ firstSurah.makkiOrMadani // Value is either "makki" or "madani"
 
 Start, Pause and Stop the Tilawa
 ```kotlin
-tilawaProvider.act(start)
-tilawaProvider.act(pause)
-tilawaProvider.act(stop)
+tilawaProducer.act(start)
+tilawaProducer.act(pause)
+tilawaProducer.act(stop)
 ```
 
 Change Qari and Surah
 ```kotlin
-tilawaProvider.act {
+tilawaProducer.act {
   changeSurah(it, SUVAR_INFO[1] /* Surah Al-Baqarah */)
 }
-tilawaProvider.act {
+tilawaProducer.act {
   changeQari(it, tilawaProvider.qurraInfo[1] /* Second available Qari */)
 }
 ```
 
 Go to Next Surah/Previous Surah
 ```kotlin
-tilawaProvider.act(next)
-tilawaProvider.act(previous)
+tilawaProducer.act(next)
+tilawaProducer.act(previous)
 ```
 
 Recite from the start of the current Surah
 ```kotlin
-tilawaProvider.act(reciteFromStart)
+tilawaProducer.act(reciteFromStart)
 ```
 
 Recite from a certain position in time
 ```kotlin
-tilawaProvider.act{
+tilawaProducer.act{
   reciteFrom(it, 60000L /* Recite from 1:00 onwards */)
 }
 ```
 
 Observe the Tilawa. The observer will be called whenever the Tilawa state change. This can be every second for progress updates, on Qari change, on Surah Change, on audio state change (e.g. start, pause, stop). 
 ```kotlin
-tilawaProvider.act{
+tilawaProducer.act{
   addObserver(it) { observation ->
     // observation.qariInfo
     // observation.surahInfo
@@ -116,7 +116,7 @@ tilawaProvider.act{
 
 Perform a custom action on the tilawa
 ```kotlin
-tilawaProvider.act{ currentTilawa ->
+tilawaProducer.act{ currentTilawa ->
   val newTilawa = //...
   // Your logic
   
