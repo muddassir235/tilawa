@@ -6,6 +6,7 @@ import com.muddassir.eprefs.delete
 import com.muddassir.eprefs.load
 import com.muddassir.eprefs.save
 import com.muddassir.faudio.Audio
+import com.muddassir.faudio.AudioObservation
 import com.muddassir.faudio.AudioStateInput
 
 internal const val TILAWA_OBSERVATION_KEY = "tilawa_observation"
@@ -45,8 +46,18 @@ class TilawaProducer(val context: Context) {
     }
 
     /* Reset saved state will be set qari 0, surah 0, progress 0, paused and stopped */
-    fun resetState() {
-        context.delete<TilawaObservation>(TILAWA_OBSERVATION_KEY)
+    fun resetState() { context.delete<TilawaObservation>(TILAWA_OBSERVATION_KEY) }
+
+    /* Current state of the tilawa */
+    fun observation(): TilawaObservation {
+        return TilawaObservation(tilawa.qariInfo, tilawa.surahBeingRecited, AudioObservation(
+            tilawa.audio.error,
+            tilawa.audio.stopped,
+            !tilawa.audio.started,
+            tilawa.audio.currentIndex,
+            tilawa.audio.currentPosition,
+            null,
+            null
+        ))
     }
 }
-
