@@ -60,4 +60,17 @@ class TilawaProducer(val context: Context) {
             null
         ))
     }
+
+    /* Observe state changes and get a diff of the changes that happened. */
+    fun addTilawaDiffObserver(observer: ((prev: TilawaObservation?, now: TilawaObservation,
+                                          diff: TilawaObservation) -> Unit)) {
+        var prev: TilawaObservation? = null
+
+        act {
+            addObserver(it) { now ->
+                observer.invoke(prev, now, now.diff(prev))
+                prev = now
+            }
+        }
+    }
 }
