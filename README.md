@@ -3,6 +3,8 @@
 
 An Android Library, written in Kotlin, for streaming tilawa of the Qur'an from the web (Currently [mp3quran.net](mp3quran.net) is supported).
 
+Used in https://play.google.com/store/apps/details?id=com.muddassirkhan.quran_android
+
 Currently the following Qurra are supported,
         
 * Sheikh Abdur Rahman as Sudais الشيخ عبد الرحمن السديس
@@ -156,3 +158,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+## Apps by Muddassir Ahmed:
+* https://play.google.com/store/apps/details?id=com.muddassirkhan.quran_android
+* https://play.google.com/store/apps/details?id=com.app.kitaabattawheed
