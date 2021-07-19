@@ -23,13 +23,18 @@ fun getQurraData(context: Context): MutableLiveData<Array<QariInfo>> {
         urlsLoadListener = object: ServerUrlsLoadListener {
             override fun onQariUrlsLoaded(urls: Array<String?>?) {
                 val currentVal = qurraData.value!!
+
+                fun getCurrentFirstServerUrl(qariInfo: QariInfo): String? {
+                    if(qariInfo.recitations.isNullOrEmpty()) return null
+                    return qariInfo.recitations[0].serverUrl
+                }
+
                 val data = Array(currentVal.size) {
                     QariInfo(
                         number = currentVal[it].number,
                         arabicName = currentVal[it].arabicName,
                         englishName = currentVal[it].englishName,
-                        audioServerUrl = urls?.get(it) ?: currentVal[it].audioServerUrl,
-                        availableSuvar = currentVal[it].availableSuvar,
+                        recitations = arrayOf(RecitationInfo(serverUrl = urls?.get(it) ?: getCurrentFirstServerUrl(currentVal[it]) ?: "")),
                         isFavorite = currentVal[it].isFavorite
                     )
                 }
@@ -51,7 +56,7 @@ internal val getSavedQurraData: ((Context) -> Array<QariInfo>?) = {
 internal val getHardCodedQurraData: ((Context) -> Array<QariInfo>?) = {
     val qurraNames        = it.resources.getStringArray(R.array.qurra_names)
     val qurraEnglishNames = it.resources.getStringArray(R.array.qurra_english_names)
-    val audioServerUrls: Array<String?>?  =
+    val audioServerUrls: Array<String?>  =
         it.resources.getStringArray(R.array.qurra_audio_servers)
 
     Array(qurraNames.size) { i ->
@@ -59,7 +64,7 @@ internal val getHardCodedQurraData: ((Context) -> Array<QariInfo>?) = {
             number = i,
             arabicName = qurraNames[i],
             englishName = qurraEnglishNames[i],
-            audioServerUrl = audioServerUrls?.get(i),
+            recitations = arrayOf(RecitationInfo(serverUrl = audioServerUrls.get(i) ?: "")),
             isFavorite = false
         )
     }

@@ -2,16 +2,16 @@ package com.muddassir.tilawa
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.muddassir.kmacros.delay
-import org.junit.After
-import org.junit.Assert.assertEquals
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.junit.Assert.assertTrue
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-const val repetitions = 3
+const val repetitions = 1
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -42,243 +42,124 @@ class TilawaTest {
      * reciteFromStart : _ -> 0 seconds
      */
 
-    private lateinit var tilawaProducer: TilawaProducer
+    private lateinit var tilawa: Tilawa
+    private lateinit var qurraInfo: Array<QariInfo>
 
-    @After
-    fun teardown() {
-        try {
-            tilawaProducer.act(removeObservers)
-            tilawaProducer.resetState()
-        } catch (e: Exception) {
-
-        }
+    /**
+     * Test the following state transitions
+     * stop -> start
+     * start -> pause
+     * pause -> start
+     * pause -> stop
+     * start -> stop
+     * next
+     * prev
+     * seekTo(100*1000)
+     * moveToIndex(2)
+     * restart
+     * changeUris
+     */
+    @Test
+    @Repeat(repetitions)
+    fun testTilawaStopStart() = afterTilawaStart {
+        assertTrue(tilawa.changeState(stop))
+        assertTrue(tilawa.changeState(start))
     }
 
     @Test
     @Repeat(repetitions)
-    fun testStartStoppedToStarted() {
-        afterTilawaStart {
-            tilawaProducer.act(stop)
-            tilawaProducer.act(start)
-            observeAfter(10000) {
-                verifyTilawa(it, stopped = false, paused = false, progress = 20000L,
-                    surahInfo = tilawaProducer.qurraInfo[0].availableSuvar[3],
-                    qariInfo = tilawaProducer.qurraInfo[0])
-            }
-        }
+    fun testTilawaStartPause() = afterTilawaStart {
+        assertTrue(tilawa.changeState(pause))
     }
 
     @Test
     @Repeat(repetitions)
-    fun testStartPausedToStarted() {
-        afterTilawaStart {
-            tilawaProducer.act(pause)
-            tilawaProducer.act(start)
-            observeAfter(10000) {
-                verifyTilawa(it, stopped = false, paused = false, progress = 20000L,
-                    surahInfo = tilawaProducer.qurraInfo[0].availableSuvar[3],
-                    qariInfo = tilawaProducer.qurraInfo[0])
-            }
-        }
+    fun testTilawaPauseStart() = afterTilawaStart {
+        assertTrue(tilawa.changeState(pause))
+        assertTrue(tilawa.changeState(start))
     }
 
     @Test
     @Repeat(repetitions)
-    fun testPauseStartedToPaused() {
-        afterTilawaStart {
-            tilawaProducer.act(pause)
-            observe {
-                verifyTilawa(it, stopped = false, paused = true, progress = 10000L,
-                    surahInfo = tilawaProducer.qurraInfo[0].availableSuvar[3],
-                    qariInfo = tilawaProducer.qurraInfo[0])
-            }
-        }
+    fun testTilawaPauseStop() = afterTilawaStart {
+        assertTrue(tilawa.changeState(pause))
+        assertTrue(tilawa.changeState(stop))
     }
 
     @Test
     @Repeat(repetitions)
-    fun testStopStartedToStopped() {
-        afterTilawaStart {
-            tilawaProducer.act(stop)
-            observe {
-                verifyTilawa(it, stopped = true, paused = true, progress = 10000L,
-                    surahInfo = tilawaProducer.qurraInfo[0].availableSuvar[3],
-                    qariInfo = tilawaProducer.qurraInfo[0])
-            }
-        }
+    fun testTilawaStartStop() = afterTilawaStart {
+        assertTrue(tilawa.changeState(stop))
     }
 
     @Test
     @Repeat(repetitions)
-    fun testStopPausedToStopped() {
-        afterTilawaStart {
-            tilawaProducer.act(pause)
-            tilawaProducer.act(stop)
-            observe {
-                verifyTilawa(it, stopped = true, paused = true, progress = 10000L,
-                    surahInfo = tilawaProducer.qurraInfo[0].availableSuvar[3],
-                    qariInfo = tilawaProducer.qurraInfo[0])
-            }
-        }
+    fun testTilawaNext() = afterTilawaStart {
+        assertTrue(tilawa.changeState(next))
+    }
+
+
+    @Test
+    @Repeat(repetitions)
+    fun testTilawaPrev() = afterTilawaStart {
+        assertTrue(tilawa.changeState(prev))
     }
 
     @Test
     @Repeat(repetitions)
-    fun testNext() {
-        afterTilawaStart {
-            tilawaProducer.act(next)
-            observeAfter(10000) {
-                verifyTilawa(it, stopped = false, paused = false, progress = 10000L,
-                    surahInfo = tilawaProducer.qurraInfo[0].availableSuvar[4],
-                    qariInfo = tilawaProducer.qurraInfo[0])
-            }
-        }
+    fun testTilawaSeekTo() = afterTilawaStart {
+        assertTrue(tilawa.changeState {
+            seekTo(it, 100000)
+        })
     }
 
     @Test
     @Repeat(repetitions)
-    fun testPrev() {
-        afterTilawaStart {
-            tilawaProducer.act(previous)
-            observeAfter(10000) {
-                verifyTilawa(it, stopped = false, paused = false, progress = 10000L,
-                    surahInfo = tilawaProducer.qurraInfo[0].availableSuvar[2],
-                    qariInfo = tilawaProducer.qurraInfo[0])
-            }
-        }
+    fun testTilawaToIndex() = afterTilawaStart {
+        assertTrue(tilawa.changeState {
+            moveToIndex(it, 2)
+        })
     }
 
     @Test
     @Repeat(repetitions)
-    fun testReciteFrom() {
-        afterTilawaStart {
-            tilawaProducer.act{ reciteFrom(it, 60000L) }
-            observeAfter(10000) {
-                verifyTilawa(it, stopped = false, paused = false, progress = 70000L,
-                    surahInfo = tilawaProducer.qurraInfo[0].availableSuvar[3],
-                    qariInfo = tilawaProducer.qurraInfo[0])
-            }
-        }
+    fun testTilawaReciteFromStart() = afterTilawaStart {
+        assertTrue(tilawa.changeState(reciteFromStart))
     }
 
     @Test
     @Repeat(repetitions)
-    fun testChangeQari(){
-        afterTilawaStart {
-            tilawaProducer.act {
-                changeQari(
-                    it,
-                    tilawaProducer.qurraInfo[2],
-                    tilawaProducer.qurraInfo[2].availableSuvar[0]
-                )
-            }
-            observeAfter(10000){
-                verifyTilawa(it, stopped = false, paused = false, progress = 10000L,
-                    surahInfo = tilawaProducer.qurraInfo[0].availableSuvar[3],
-                    qariInfo = tilawaProducer.qurraInfo[2])
-            }
-        }
+    fun testTilawaChangeQari() = afterTilawaStart {
+        assertTrue(tilawa.changeState {
+            changeQari(it, qurraInfo[1], 0)
+        })
     }
 
-    @Test
-    @Repeat(repetitions)
-    fun testChangeSurah(){
-        afterTilawaStart {
-            tilawaProducer.act{
-                changeSurah(
-                    it,
-                    tilawaProducer.qurraInfo[0].availableSuvar[10]
-                )
-            }
-            observeAfter(10000) {
-                verifyTilawa(it, stopped = false, paused = false, progress = 10000L,
-                    surahInfo = tilawaProducer.qurraInfo[0].availableSuvar[10],
-                    qariInfo = tilawaProducer.qurraInfo[0])
-            }
-        }
-    }
-
-    @Test
-    @Repeat(repetitions)
-    fun testReciteFromStart(){
-        afterTilawaStart {
-            tilawaProducer.act(reciteFromStart)
-            observeAfter(10000) {
-                verifyTilawa(it, stopped = false, paused = false, progress = 10000L,
-                    surahInfo = tilawaProducer.qurraInfo[0].availableSuvar[3],
-                    qariInfo = tilawaProducer.qurraInfo[0])
-            }
-        }
-    }
-
-    @Test
-    @Repeat(repetitions)
-    fun testStatePersistence(){
-        afterTilawaStart(150000L) {
-            delay(120000L) {
-                tilawaProducer = TilawaProducer(
-                    InstrumentationRegistry.getInstrumentation().targetContext)
-
-                tilawaProducer.act(start)
-
-                observeAfter(10000L) {
-                    verifyTilawa(it, stopped = false, paused = false, progress = 130000L,
-                        surahInfo = tilawaProducer.qurraInfo[0].availableSuvar[3],
-                        qariInfo = tilawaProducer.qurraInfo[0])
-                }
-            }
-        }
-    }
-
-    private fun verifyTilawa(found: TilawaObservation, stopped:Boolean, paused:Boolean,
-                             progress: Long, surahInfo: SurahInfo, qariInfo: QariInfo
-    ) {
-        assertEquals(stopped, found.audioStateInfo?.stopped?:true)
-        assertEquals(paused, found.audioStateInfo?.paused?:true)
-        assertEquals(qariInfo.availableSuvar.indexOf(surahInfo),
-            found.audioStateInfo?.index?:0)
-        assertTrue(found.audioStateInfo?.duration?:0L != 0L)
-        assertTrue(found.audioStateInfo?.bufferedPosition?:0L != 0L)
-        assertTrue((found.audioStateInfo?.progress ?: 0L) > (progress-10000L))
-        assertTrue((found.audioStateInfo?.progress ?: 0L) < (progress+20000L))
-        assertEquals(surahInfo, found.surahInfo ?: SUVAR_INFO[0])
-        assertEquals(qariInfo, found.qariInfo)
-    }
-
-    private fun observeAfter(millis: Long, observer:
-        (observation: TilawaObservation) -> Unit) {
-        delay(millis) {
-            observe(observer)
-        }
-    }
-
-    private fun observe(observer: (observation: TilawaObservation) -> Unit) {
-        tilawaProducer.act{ addObserver(it, observer) }
-    }
-
-    private fun afterTilawaStart(task: ((Unit)->Unit)) {
+    private fun afterTilawaStart(task: (suspend (Unit)->Unit)) {
         runOnMainThread {
-            tilawaProducer = TilawaProducer(
-                context = InstrumentationRegistry.getInstrumentation().targetContext)
-            tilawaProducer.act{ changeSurah(it, SUVAR_INFO[3]) }
-            tilawaProducer.act(start)
-            delay(10000) { task.invoke(Unit) }
+            val context = InstrumentationRegistry.getInstrumentation().targetContext
+            tilawa = Tilawa(context)
+            qurraInfo = getQurraData(context).value!!
+
+            background {
+                assertTrue(tilawa.setState(ExpectedTilawaState.defaultWithQariInfo(qurraInfo[0])))
+                assertTrue(tilawa.changeState(start))
+                assertTrue(tilawa.changeState(next))
+                delay(5000)
+                task.invoke(Unit)
+            }
         }
     }
 
-    private fun afterTilawaStart(duration: Long, task: ((Unit)->Unit)) {
-        runOnMainThread(duration) {
-            tilawaProducer = TilawaProducer(
-                context = InstrumentationRegistry.getInstrumentation().targetContext)
-            tilawaProducer.act{ changeSurah(it, SUVAR_INFO[3]) }
-            tilawaProducer.act(start)
-            delay(10000) { task.invoke(Unit) }
+    private fun background( action:(suspend () -> Unit)) {
+        GlobalScope.launch(Dispatchers.IO) {
+            action()
         }
     }
 
     private fun runOnMainThread(task: ((Unit)->Unit)) {
         InstrumentationRegistry.getInstrumentation().runOnMainSync { task.invoke(Unit) }
-        Thread.sleep(30000)
+        Thread.sleep(15000)
     }
 
     private fun runOnMainThread(duration: Long, task: ((Unit)->Unit)) {
