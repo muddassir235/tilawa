@@ -14,10 +14,8 @@ Currently the following Qurra are supported,
 * Sheikh Shiekh Maher al Mu'aiqly الشيخ ماهر بن حمد المعيقلي
 * Sheikh Abdullah 'awad Al Juhainy الشيخ عبد الله عواد الجهني
 * Sheikh Muhammad al Luhaidan الشيخ محمد اللحيدان
-* Sheikh Mishary bin Rashid al Afasy الشيخ مشاري بن راشد العفاسي
 * Sheikh Ali Jaber الشيخ علي جابر
 * Sheikh Bandar Baleela الشيخ بندر بليله
-* Sheikh Abdul Basit Abdus Samad الشيخ عبـد الباسـط عبـد ٱلصـمـد
 * Sheikh Raad Muhammad al Kurdi الشيخ رعد محمد الكردی
 * Sheikh Ahmed bin Ali al 'Ajmi الشيخ أحمد بن علي العجمي
 
